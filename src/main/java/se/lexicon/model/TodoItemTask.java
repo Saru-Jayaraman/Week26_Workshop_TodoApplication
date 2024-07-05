@@ -39,22 +39,36 @@ public class TodoItemTask {
         this.todoItem = Objects.requireNonNull(todoItem, "TodoItem cannot be null... TodoItemTask should contain 1 TodoItem...");
     }
 
-    public String getSummary() {
-        String todoItemTaskSummary = "TodoItemTask ID: " + getId() + " Assigned: " + String.valueOf(isAssigned()).toUpperCase() + " " +
-                getTodoItem().getSummary();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TodoItemTask that = (TodoItemTask) o;
+        return id == that.id && assigned == that.assigned && Objects.equals(todoItem, that.todoItem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, assigned, todoItem);
+    }
+
+    @Override
+    public String toString() {
+        String todoItemTaskSummary = "TodoItemTask{" + "id=" + getId() + ", assigned=" + isAssigned() +
+                ", todoItem=" + getTodoItem() + '}';
         if(isAssigned()) {
             String isOverdue;
             if(todoItem.isDone()) {
-                isOverdue = "Todo Item was FINISHED by the ";
+                isOverdue = "Todo Item was FINISHED";
             } else if(todoItem.isOverdue()) {
-                isOverdue = "Todo Item is OVERDUE on the ";
+                isOverdue = "Todo Item is OVERDUE";
             } else {
-                isOverdue = "Todo Item is NOT OVERDUE and needs to be completed before deadline by the ";
+                isOverdue = "Todo Item is NOT OVERDUE and needs to be completed before deadline";
             }
-            todoItemTaskSummary += isOverdue + "Assigned Person: " + getAssignee().getSummary();
+            todoItemTaskSummary += "\n" + isOverdue;
         } else {
-            todoItemTaskSummary += "Not assigned to anyone";
+            todoItemTaskSummary += "\nNot assigned to anyone";
         }
-        return todoItemTaskSummary;
+        return  todoItemTaskSummary;
     }
 }

@@ -1,5 +1,6 @@
 package se.lexicon.model;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Person {
@@ -7,13 +8,15 @@ public class Person {
     private String firstName;
     private String lastName;
     private String email;
+    private AppUser credentials;
 
-    public Person(String firstName, String lastName, String email) {
+    public Person(String firstName, String lastName, String email, AppUser credentials) {
         Random random = new Random();
         this.id = random.nextInt(100);
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);
+        setCredentials(credentials);
     }
 
     public int getId() {
@@ -47,13 +50,32 @@ public class Person {
         this.email = email;
     }
 
+    public void setCredentials(AppUser credentials) {
+        this.credentials = credentials;
+    }
+
     private void validateInput(String paramName, String paramFullName) {
         if(paramName == null || paramName.trim().isEmpty()) {
             throw new IllegalArgumentException(paramFullName + " is either empty or null...");
         }
     }
 
-    public String getSummary() {
-        return "Person ID: " + getId() + " Name: " + getFirstName() + " " + getLastName() + " Email: " + getEmail();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" + "id=" + getId() + ", firstName='" + getFirstName() + '\'' +
+                ", lastName='" + getLastName() + '\'' + ", email='" + getEmail() + '\'' + '}';
     }
 }

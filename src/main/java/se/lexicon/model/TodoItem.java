@@ -75,8 +75,23 @@ public class TodoItem {
         return LocalDate.now().isAfter(deadLine);
     }
 
-    public String getSummary() {
-        return "TodoItem ID: " + getId() + " Title: " + getTitle() + " Description: " + getTaskDescription() +
-                " Deadline: " + getDeadLine() + "\nCreator Details: " + getCreator().getSummary() + "\n";
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TodoItem todoItem = (TodoItem) o;
+        return id == todoItem.id && done == todoItem.done && Objects.equals(title, todoItem.title) && Objects.equals(taskDescription, todoItem.taskDescription) && Objects.equals(deadLine, todoItem.deadLine);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, taskDescription, deadLine, done);
+    }
+
+    @Override
+    public String toString() {
+        return "TodoItem{" + "id=" + getId() + ", title='" + getTitle() + '\'' +
+                ", taskDescription='" + getTaskDescription() + '\'' + ", deadLine=" + getDeadLine() +
+                ", done=" + isDone() + '}';
     }
 }
