@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TodoItemTaskTest {
     private TodoItem todoItemObj1, todoItemObj2;
@@ -16,7 +15,8 @@ public class TodoItemTaskTest {
 
     @BeforeEach
     void setUp() {
-        personObj1 = new Person("Person1", "Person1", "test1@gmail.com");
+        AppUser appUser1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
+        personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUser1);
         todoItemObj1 = new TodoItem("Change Tires", "Preferable to use MRF brand",
                 LocalDate.of(2024, 6, 30), personObj1, false);
         todoItemObj2 = new TodoItem("Check brightness of light", "Light is dim",
@@ -55,20 +55,35 @@ public class TodoItemTaskTest {
 
     @Test
     @Order(4)
-    void testGetSummary() {
+    void testToString() {
         TodoItemTask todoItemTaskObj1 = new TodoItemTask(personObj1, todoItemObj1);
-        String expected = "TodoItemTask ID: " + todoItemTaskObj1.getId() + " Assigned: TRUE " +
-                "TodoItem ID: " + todoItemObj1.getId() + " Title: Change Tires Description: Preferable to use MRF brand Deadline: 2024-06-30\n" +
-                "Creator Details: Person ID: " + todoItemObj1.getCreator().getId() + " Name: Person1 Person1 Email: test1@gmail.com\n" +
-                "Todo Item is NOT OVERDUE and needs to be completed before deadline by the Assigned Person: Person ID: " + personObj1.getId() +
-                " Name: Person1 Person1 Email: test1@gmail.com";
-        assertEquals(expected, todoItemTaskObj1.getSummary());
+        String expected = "TodoItemTask{id=" + todoItemTaskObj1.getId() + ", assigned=true, todoItem=TodoItem{id=" + todoItemObj1.getId() +
+                ", title='Change Tires', " + "taskDescription='Preferable to use MRF brand', deadLine=2024-06-30, done=false}}\n" +
+                "Todo Item is OVERDUE";
+        assertEquals(expected, todoItemTaskObj1.toString());
 
         TodoItemTask todoItemTaskObj2 = new TodoItemTask(null, todoItemObj2);
-        expected = "TodoItemTask ID: " + todoItemTaskObj2.getId() + " Assigned: FALSE " +
-                "TodoItem ID: " + todoItemObj2.getId() + " Title: Check brightness of light Description: Light is dim Deadline: 2024-05-30\n" +
-                "Creator Details: Person ID: " + todoItemObj2.getCreator().getId() + " Name: Person1 Person1 Email: test1@gmail.com\n" +
+        expected = "TodoItemTask{id=" + todoItemTaskObj2.getId() + ", assigned=false, todoItem=TodoItem{id=" + todoItemObj2.getId() +
+                ", title='Check brightness of light', taskDescription='Light is dim', deadLine=2024-05-30, done=true}}\n" +
                 "Not assigned to anyone";
-        assertEquals(expected, todoItemTaskObj2.getSummary());
+        assertEquals(expected, todoItemTaskObj2.toString());
+    }
+
+    @Test
+    @Order(5)
+    void testEquals() {
+        TodoItemTask todoItemTaskObj1 = new TodoItemTask(personObj1, todoItemObj1);
+        TodoItemTask todoItemTaskObj2 = new TodoItemTask(personObj1, todoItemObj2);
+        assertTrue(todoItemTaskObj1.equals(todoItemTaskObj1));
+        assertFalse(todoItemTaskObj1.equals(todoItemTaskObj2));
+    }
+
+    @Test
+    @Order(6)
+    void testHashCode() {
+        TodoItemTask todoItemTaskObj1 = new TodoItemTask(personObj1, todoItemObj1);
+        TodoItemTask todoItemTaskObj2 = new TodoItemTask(personObj1, todoItemObj2);
+        assertNotEquals(todoItemTaskObj1.hashCode(), todoItemTaskObj2.hashCode());
+        assertEquals(todoItemTaskObj1.hashCode(), todoItemTaskObj1.hashCode());
     }
 }

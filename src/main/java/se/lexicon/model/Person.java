@@ -51,7 +51,7 @@ public class Person {
     }
 
     public void setCredentials(AppUser credentials) {
-        this.credentials = credentials;
+        this.credentials = Objects.requireNonNull(credentials, "Credentials cannot be null...");
     }
 
     private void validateInput(String paramName, String paramFullName) {

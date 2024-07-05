@@ -11,8 +11,10 @@ public class PersonTest {
 
     @BeforeEach
     void setUp() {
-        personObj1 = new Person("Person1", "Person1", "test1@gmail.com");
-        personObj2 = new Person("Person2", "Person2", "test2@gmail.com");
+        AppUser appUser1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
+        AppUser appUser2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
+        personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUser1);
+        personObj2 = new Person("Person2", "Person2", "test2@gmail.com", appUser2);
     }
 
     @Test
@@ -42,12 +44,30 @@ public class PersonTest {
 
         thrown = assertThrows(IllegalArgumentException.class, () -> personObj2.setEmail(null));
         assertTrue(thrown.getMessage().contains("null"));
+
+        thrown = assertThrows(NullPointerException.class, () -> personObj2.setCredentials(null));
+        assertTrue(thrown.getMessage().contains("null"));
     }
 
     @Test
     @Order(3)
-    void testGetSummary() {
-        String expected = "Person ID: " + personObj2.getId() + " Name: Person2 Person2 Email: test2@gmail.com";
-        assertEquals(expected, personObj2.getSummary());
+    void testToString() {
+        String expected = "Person{id=" + personObj2.getId() + ", firstName='Person2', lastName='Person2', " +
+                "email='test2@gmail.com'}";
+        assertEquals(expected, personObj2.toString());
+    }
+
+    @Test
+    @Order(4)
+    void testEquals() {
+        assertTrue(personObj1.equals(personObj1));
+        assertFalse(personObj1.equals(personObj2));
+    }
+
+    @Test
+    @Order(5)
+    void testHashCode() {
+        assertNotEquals(personObj1.hashCode(), personObj2.hashCode());
+        assertEquals(personObj1.hashCode(), personObj1.hashCode());
     }
 }
