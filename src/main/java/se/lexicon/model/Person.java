@@ -1,7 +1,7 @@
 package se.lexicon.model;
 
 import java.util.Objects;
-import java.util.Random;
+import se.lexicon.sequencers.*;
 
 public class Person {
     private final int id;
@@ -11,8 +11,7 @@ public class Person {
     private AppUser credentials;
 
     public Person(String firstName, String lastName, String email, AppUser credentials) {
-        Random random = new Random();
-        this.id = random.nextInt(100);
+        this.id = PersonIdSequencer.nextId();
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);

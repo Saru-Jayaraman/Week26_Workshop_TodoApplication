@@ -1,6 +1,7 @@
 package se.lexicon.model;
 
 import java.util.Objects;
+import se.lexicon.sequencers.*;
 
 public class TodoItemTask {
     private final int id;
@@ -10,7 +11,7 @@ public class TodoItemTask {
 
     public TodoItemTask(Person assignee, TodoItem todoItem) {
         setTodoItem(todoItem);
-        this.id = Integer.parseInt((Integer.valueOf(todoItem.getId()).toString()).concat("1"));
+        this.id = TodoItemTaskIdSequencer.nextId();
         setAssignee(assignee);
     }
 

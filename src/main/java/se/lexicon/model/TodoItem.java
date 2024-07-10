@@ -2,7 +2,7 @@ package se.lexicon.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Random;
+import se.lexicon.sequencers.*;
 
 public class TodoItem {
     private final int id;
@@ -13,8 +13,7 @@ public class TodoItem {
     private Person creator;
 
     public TodoItem(String title, String taskDescription, LocalDate deadLine, Person creator, boolean done) {
-        Random random = new Random();
-        this.id = random.nextInt(100);
+        this.id = TodoItemIdSequencer.nextId();
         setTitle(title);
         setTaskDescription(taskDescription);
         setDeadLine(deadLine);

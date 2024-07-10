@@ -1,8 +1,9 @@
 package se.lexicon;
 
+import se.lexicon.dao.*;
 import se.lexicon.model.*;
-
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Hello world!
@@ -12,114 +13,184 @@ public class App
 {
     public static void main( String[] args )
     {
-        AppUser appUser1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
-        AppUser appUser2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
-        AppUser appUser3 = new AppUser("person3", "person3", AppRole.ROLE_APP_USER);
-        AppUser appUser4 = new AppUser("person4", "person4", AppRole.ROLE_APP_ADMIN);
-        AppUser appUser5 = new AppUser("person5", "person5", AppRole.ROLE_APP_USER);
+        AppUser appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
+        AppUser appUserObj2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
+        AppUser appUserObj3 = new AppUser("person3", "person3", AppRole.ROLE_APP_USER);
+        AppUser appUserObj4 = new AppUser("person4", "person4", AppRole.ROLE_APP_ADMIN);
+        AppUser appUserObj5 = new AppUser("person5", "person5", AppRole.ROLE_APP_USER);
 
-        Person personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUser1);
-        String personDetails = personObj1.toString();
-        System.out.println(personDetails);
+        AppUserDAOCollection appUserDAOCollection = new AppUserDAOCollection();
+        appUserDAOCollection.persist(appUserObj1);
+        appUserDAOCollection.persist(appUserObj2);
+        appUserDAOCollection.persist(appUserObj3);
+        appUserDAOCollection.persist(appUserObj4);
+        appUserDAOCollection.persist(appUserObj5);
 
-        Person personObj2 = new Person("Person2", "Person2", "test2@gmail.com", appUser2);
-        personDetails = personObj2.toString();
-        System.out.println(personDetails);
+        System.out.println("-------------------------------" + "APP USER class - Find All:" + "-------------------------------");
+        Set<AppUser> appUserSet = appUserDAOCollection.findAll();
+        for(AppUser appUser : appUserSet) {
+            System.out.println(appUser.toString());
+        }
 
-        Person personObj3 = new Person("Person3", "Person3", "test3@gmail.com", appUser3);
-        personDetails = personObj3.toString();
-        System.out.println(personDetails);
+        System.out.println("-------------------------------" + "AppUser class - Find by Username: " + appUserObj2.getUsername());
+        AppUser appUser = appUserDAOCollection.findByUsername(appUserObj2.getUsername());
+        System.out.println(appUser);
 
-        Person personObj4 = new Person("Person4", "Person4", "test4@gmail.com", appUser4);
-        personDetails = personObj4.toString();
-        System.out.println(personDetails);
-
-        Person personObj5 = new Person("Person5", "Person5", "test5@gmail.com", appUser5);
-        personDetails = personObj5.toString();
-        System.out.println(personDetails);
+        System.out.println("-------------------------------" + "AppUser class - Remove the id: " + appUserObj3.getUsername());
+        appUserDAOCollection.remove(appUserObj3.getUsername());
+        System.out.println("-------------------------------" + "After Removing:");
+        appUserSet = appUserDAOCollection.findAll();
+        for(AppUser appUser1 : appUserSet) {
+            System.out.println(appUser1.toString());
+        }
 
         System.out.println();
 
-        System.out.println("========Testcase1========1.TodoItemTask References one person && 2.TodoItem References one person && 3.TodoItemTask contains one TodoItem --> Creator and Assignee are same");
-        //TodoItem1 --> Creator and Assignee are same
+        Person personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUserObj1);
+        Person personObj2 = new Person("Person2", "Person2", "test2@gmail.com", appUserObj2);
+        Person personObj3 = new Person("Person3", "Person3", "test3@gmail.com", appUserObj3);
+        Person personObj4 = new Person("Person4", "Person4", "test4@gmail.com", appUserObj4);
+        Person personObj5 = new Person("Person5", "Person5", "test5@gmail.com", appUserObj5);
+
+        PersonDAOCollection personDaoObj = new PersonDAOCollection();
+        personDaoObj.persist(personObj1);
+        personDaoObj.persist(personObj2);
+        personDaoObj.persist(personObj3);
+        personDaoObj.persist(personObj4);
+        personDaoObj.persist(personObj5);
+
+        System.out.println("-------------------------------" + "PERSON class - Find All:" + "-------------------------------");
+        Set<Person> personSet = personDaoObj.findAll();
+        for(Person person : personSet) {
+            System.out.println(person.toString());
+        }
+
+        System.out.println("-------------------------------" + "Person class - Find by ID:" + personObj1.getId());
+        Person person = personDaoObj.findById(personObj1.getId());
+        System.out.println(person);
+
+        System.out.println("-------------------------------" + "Person class - Find by Email: " + personObj4.getEmail());
+        person = personDaoObj.findByEmail(personObj4.getEmail());
+        System.out.println(person);
+
+        System.out.println("-------------------------------" + "Person class - Remove the id: " + personObj1.getId());
+        personDaoObj.remove(personObj1.getId());
+        System.out.println("-------------------------------" + "After Removing:");
+        personSet = personDaoObj.findAll();
+        for(Person person1 : personSet) {
+            System.out.println(person1.toString());
+        }
+
+        System.out.println();
+
         TodoItem todoItemObj1 = new TodoItem("Change Tires", "Preferable to use MRF brand",
-                LocalDate.of(2024, 6, 30), personObj1, false);
-
-        TodoItemTask todoItemTask1 = new TodoItemTask(personObj1, todoItemObj1);
-        String todoItemTaskDetails = todoItemTask1.toString();
-        System.out.println(todoItemTaskDetails);
-
-        System.out.println();
-
-        System.out.println("========Testcase2========1.TodoItemTask References one person && 2.TodoItem References one person && 3.TodoItemTask contains one TodoItem --> Creator and Assignee are different");
-        //TodoItem2 --> Creator and Assignee are different
+                LocalDate.of(2024, 6, 30), personObj1, true);
         TodoItem todoItemObj2 = new TodoItem("Check brightness of light", "Light is dim",
                 LocalDate.of(2024, 5, 30), personObj2, false);
-
-        TodoItemTask todoItemTask2 = new TodoItemTask(personObj3, todoItemObj2);
-        todoItemTaskDetails = todoItemTask2.toString();
-        System.out.println(todoItemTaskDetails);
-
-        System.out.println();
-
-        System.out.println("========Testcase3========1.TodoItemTask References zero person && 2.TodoItem References one person && 3.TodoItemTask contains one TodoItem --> Assignee is null");
-        //TodoItem3 --> Passing only TodoItem --> Not assigned to any person
         TodoItem todoItemObj3 = new TodoItem("Check brake", "Produces sound when applying brake",
-                LocalDate.of(2024, 5, 30), personObj2, false);
+                LocalDate.of(2024, 5, 30), personObj2, true);
+        TodoItem todoItemObj4 = new TodoItem("Check horn", "Produces sound when pressing brake",
+                LocalDate.of(2024, 7, 30), personObj4, false);
+        TodoItem todoItemObj5 = new TodoItem("Check light", "Light is blinking",
+                LocalDate.of(2024, 7, 15), personObj4, true);
 
-        TodoItemTask todoItemTask3 = new TodoItemTask(null, todoItemObj3);
-        todoItemTaskDetails = todoItemTask3.toString();
-        System.out.println(todoItemTaskDetails);
+        TodoItemDAOCollection todoItemDAOCollection = new TodoItemDAOCollection();
+        todoItemDAOCollection.persist(todoItemObj1);
+        todoItemDAOCollection.persist(todoItemObj2);
+        todoItemDAOCollection.persist(todoItemObj3);
+        todoItemDAOCollection.persist(todoItemObj4);
+        todoItemDAOCollection.persist(todoItemObj5);
+
+        System.out.println("-------------------------------" + "TODO ITEM class - Find All:" + "-------------------------------");
+        Set<TodoItem> todoItemSet = todoItemDAOCollection.findAll();
+        for(TodoItem todoItem : todoItemSet) {
+            System.out.println(todoItem.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by ID:" + todoItemObj2.getId());
+        TodoItem todoItem = todoItemDAOCollection.findById(todoItemObj2.getId());
+        System.out.println(todoItem);
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by Done Status: TRUE");
+        todoItemSet = todoItemDAOCollection.findAllByDoneStatus(true);
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by Title: " + todoItemObj4.getTitle());
+        todoItemSet = todoItemDAOCollection.findByTitleContains("check horn");
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by Person Id: " + todoItemObj2.getCreator().getId());
+        todoItemSet = todoItemDAOCollection.findByPersonID(todoItemObj2.getCreator().getId());
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by Deadline Before: " + LocalDate.of(2024,6,30));
+        todoItemSet = todoItemDAOCollection.findByDeadlineBefore(LocalDate.of(2024,6,30));
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Find by Deadline After: " + LocalDate.of(2024,6,29));
+        todoItemSet = todoItemDAOCollection.findByDeadlineAfter(LocalDate.of(2024,6,29));
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItem class - Remove the id: " + todoItemObj2.getId());
+        todoItemDAOCollection.remove(todoItemObj2.getId());
+        System.out.println("-------------------------------" + "After Removing:");
+        todoItemSet = todoItemDAOCollection.findAll();
+        for(TodoItem todoItem1 : todoItemSet) {
+            System.out.println(todoItem1.toString());
+        }
 
         System.out.println();
 
-        System.out.println("========Testcase5========1.TodoItem References zero person && 2.TodoItemTask contains one TodoItem --> Creator is null");
-        //TodoItem5 --> Creator is null
-        TodoItem todoItemObj5 = new TodoItem("Check horn", "Produces sound when pressing brake",
-                LocalDate.of(2024, 1, 30), null, true);
+        TodoItemTask todoItemTaskObj1 = new TodoItemTask(personObj1, todoItemObj1);
+        TodoItemTask todoItemTaskObj2 = new TodoItemTask(personObj1, todoItemObj2);
+        TodoItemTask todoItemTaskObj3 = new TodoItemTask(personObj2, todoItemObj3);
+        TodoItemTask todoItemTaskObj4 = new TodoItemTask(personObj4, todoItemObj4);
+        TodoItemTask todoItemTaskObj5 = new TodoItemTask(personObj5, todoItemObj5);
 
-        TodoItemTask todoItemTask5 = new TodoItemTask(personObj5, todoItemObj5);
-        todoItemTaskDetails = todoItemTask5.toString();
-        System.out.println(todoItemTaskDetails);
+        TodoItemTaskDAOCollection todoItemTaskDAOCollection = new TodoItemTaskDAOCollection();
+
+        todoItemTaskDAOCollection.persist(todoItemTaskObj1);
+        todoItemTaskDAOCollection.persist(todoItemTaskObj2);
+        todoItemTaskDAOCollection.persist(todoItemTaskObj3);
+        todoItemTaskDAOCollection.persist(todoItemTaskObj4);
+        todoItemTaskDAOCollection.persist(todoItemTaskObj5);
+
+        System.out.println("-------------------------------" + "TODO ITEM TASK class - Find All:" + "-------------------------------");
+        Set<TodoItemTask> todoItemTaskSet = todoItemTaskDAOCollection.findAll();
+        for(TodoItemTask todoItemTask : todoItemTaskSet) {
+            System.out.println(todoItemTask.toString());
+        }
+
+        System.out.println("-------------------------------" + "TodoItemTask class - Find by ID: " + todoItemTaskObj3.getId());
+        TodoItemTask todoItemTask = todoItemTaskDAOCollection.findById(todoItemTaskObj3.getId());
+        System.out.println(todoItemTask);
+
+        System.out.println("-------------------------------" + "TodoItemTask class - Find by Assigned Status: FALSE");
+        todoItemTaskSet = todoItemTaskDAOCollection.findByAssignedStatus(false);
+        System.out.println(todoItemTaskSet);
+
+        System.out.println("-------------------------------" + "TodoItemTask class - Find by Person Id: " + todoItemTaskObj1.getAssignee().getId());
+        todoItemTaskSet = todoItemTaskDAOCollection.findByPersonId(todoItemTaskObj1.getAssignee().getId());
+        System.out.println(todoItemTaskSet);
+
+        System.out.println("-------------------------------" + "TodoItemTask class - Remove the id: " + todoItemTaskObj5.getId());
+        todoItemTaskDAOCollection.remove(todoItemTaskObj5.getId());
+        System.out.println("-------------------------------" + "After Removing:");
+        todoItemTaskSet = todoItemTaskDAOCollection.findAll();
+        for(TodoItemTask todoItemTask1 : todoItemTaskSet) {
+            System.out.println(todoItemTask1.toString());
+        }
 
         System.out.println();
-
-        System.out.println("========Testcase4========1.TodoItemTask contains zero TodoItem --> TodoItem is null");
-        //TodoItem4 --> TodoItem is null
-        TodoItemTask todoItemTask4 = new TodoItemTask(personObj4, null);
-        todoItemTaskDetails = todoItemTask4.toString();
-        System.out.println(todoItemTaskDetails);
-
-        System.out.println("========================================================================================");
-
-        System.out.println("AppUser:");
-        System.out.println("========");
-        System.out.println("APPUSER1 TOSTRING():" + appUser1 + "----" + "APPUSER1 HASHCODE():" + appUser1.hashCode());
-        System.out.println("APPUSER2 TOSTRING():" + appUser2 + "----" + "APPUSER2 HASHCODE():" + appUser2.hashCode());
-        System.out.println("APPUSER1 & APPUSER2 EQUALS():" + appUser1.equals(appUser2));
-
-        System.out.println("Person:");
-        System.out.println("=======");
-        personDetails = personObj1.toString();
-        System.out.println("PERSON1 TOSTRING():" + personDetails + "----" + "PERSON1 HASHCODE():" + personObj1.hashCode());
-        personDetails = personObj2.toString();
-        System.out.println("PERSON2 TOSTRING():" + personDetails + "----" + "PERSON2 HASHCODE():" + personObj2.hashCode());
-        System.out.println("PERSON1 & PERSON2 EQUALS():" + personObj1.equals(personObj2));
-
-        System.out.println("TodoItem:");
-        System.out.println("=========");
-        todoItemTaskDetails = todoItemObj1.toString();
-        System.out.println("TODOITEM1 TOSTRING():" + todoItemTaskDetails + "----" + "TODOITEM1 HASHCODE():" + todoItemObj1.hashCode());
-        todoItemTaskDetails = todoItemObj2.toString();
-        System.out.println("TODOITEM2 TOSTRING():" + todoItemTaskDetails + "----" + "TODOITEM2 HASHCODE():" + todoItemObj2.hashCode());
-        System.out.println("TODOITEM1 & TODOITEM2 EQUALS():" + todoItemObj1.equals(todoItemObj2));
-
-        System.out.println("TodoItemTask:");
-        System.out.println("=============");
-        todoItemTaskDetails = todoItemTask1.toString();
-        System.out.println("TODOITEMTASK1 TOSTRING():" + todoItemTaskDetails + "----" + "TODOITEMTASK1 HASHCODE():" + todoItemTask1.hashCode());
-        todoItemTaskDetails = todoItemTask2.toString();
-        System.out.println("TODOITEMTASK2 TOSTRING():" + todoItemTaskDetails + "----" + "TODOITEMTASK2 HASHCODE():" + todoItemTask2.hashCode());
-        System.out.println("TODOITEMTASK1 & TODOITEMTASK2 EQUALS():" + todoItemTask1.equals(todoItemTask2));
     }
 }
