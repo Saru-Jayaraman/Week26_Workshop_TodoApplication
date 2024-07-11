@@ -17,6 +17,7 @@ public class PersonDAOCollection implements PersonDAO {
 
     @Override
     public Person findById(int id) {
+        validateInputInteger(id);
         for (Person person : personSet) {
             if (person.getId() == id) {
                 return person;
@@ -27,6 +28,7 @@ public class PersonDAOCollection implements PersonDAO {
 
     @Override
     public Person findByEmail(String email) {
+        validateInputString(email);
         for (Person person : personSet) {
             if (person.getEmail().equals(email)) {
                 return person;
@@ -37,12 +39,12 @@ public class PersonDAOCollection implements PersonDAO {
 
     @Override
     public Set<Person> findAll() {
-        HashSet<Person> newPersonSet = new HashSet<>(personSet);
-        return newPersonSet;
+        return new HashSet<>(personSet);
     }
 
     @Override
     public void remove(int id) {
+        validateInputInteger(id);
         Iterator<Person> iterator = personSet.iterator();
         Person removePerson;
         while (iterator.hasNext()) {
@@ -51,6 +53,18 @@ public class PersonDAOCollection implements PersonDAO {
                 iterator.remove();
                 break;
             }
+        }
+    }
+
+    private void validateInputString(String userName) {
+        if(userName == null || userName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty...");
+        }
+    }
+
+    private void validateInputInteger(int id) {
+        if(id <= 0) {
+            throw new IllegalArgumentException("ID cannot be zero or negative number...");
         }
     }
 }

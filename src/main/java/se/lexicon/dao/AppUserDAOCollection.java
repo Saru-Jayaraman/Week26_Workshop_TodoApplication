@@ -12,11 +12,12 @@ public class AppUserDAOCollection implements AppUserDAO {
     @Override
     public AppUser persist(AppUser appUser) {
         appUserSet.add(appUser);
-        return null;
+        return appUser;
     }
 
     @Override
     public AppUser findByUsername(String userName) {
+        validateInput(userName);
         for (AppUser appUser : appUserSet) {
             if (appUser.getUsername().equals(userName)) {
                 return appUser;
@@ -27,12 +28,12 @@ public class AppUserDAOCollection implements AppUserDAO {
 
     @Override
     public Set<AppUser> findAll() {
-        HashSet<AppUser> newAppUserSet = new HashSet<>(appUserSet);
-        return newAppUserSet;
+        return new HashSet<>(appUserSet);
     }
 
     @Override
     public void remove(String userName) {
+        validateInput(userName);
         Iterator<AppUser> iterator = appUserSet.iterator();
         AppUser removeAppUser;
         while (iterator.hasNext()) {
@@ -41,6 +42,12 @@ public class AppUserDAOCollection implements AppUserDAO {
                 iterator.remove();
                 break;
             }
+        }
+    }
+
+    private void validateInput(String userName) {
+        if(userName == null || userName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty...");
         }
     }
 }

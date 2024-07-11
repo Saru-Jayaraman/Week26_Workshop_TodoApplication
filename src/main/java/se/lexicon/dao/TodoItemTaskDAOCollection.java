@@ -17,6 +17,7 @@ public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
     @Override
     public TodoItemTask findById(int id) {
+        validateInput(id);
         for(TodoItemTask todoItemTask : todoItemTasksSet) {
             if(todoItemTask.getId() == id) {
                 return todoItemTask;
@@ -27,8 +28,7 @@ public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
     @Override
     public Set<TodoItemTask> findAll() {
-        HashSet<TodoItemTask> newTodoItemTaskSet = new HashSet<>(todoItemTasksSet);
-        return newTodoItemTaskSet;
+        return new HashSet<>(todoItemTasksSet);
     }
 
     @Override
@@ -44,6 +44,7 @@ public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
     @Override
     public Set<TodoItemTask> findByPersonId(int personId) {
+        validateInput(personId);
         Set<TodoItemTask> idTodoItemTaskSet = new HashSet<>();
         for(TodoItemTask todoItemTask : todoItemTasksSet) {
             if(todoItemTask.getAssignee().getId() == personId) {
@@ -55,6 +56,7 @@ public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
     @Override
     public void remove(int id) {
+        validateInput(id);
         Iterator<TodoItemTask> iterator = todoItemTasksSet.iterator();
         TodoItemTask removeTodoItemTask;
         while (iterator.hasNext()) {
@@ -63,6 +65,12 @@ public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
                 iterator.remove();
                 break;
             }
+        }
+    }
+
+    private void validateInput(int id) {
+        if(id <= 0) {
+            throw new IllegalArgumentException("ID cannot be zero or negative number...");
         }
     }
 }
