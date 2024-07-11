@@ -30,7 +30,18 @@ public class PersonDAOCollection implements PersonDAO {
     public Person findByEmail(String email) {
         validateInputString(email);
         for (Person person : personSet) {
-            if (person.getEmail().equals(email)) {
+            if (person.getEmail().equalsIgnoreCase(email)) {
+                return person;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Person findByUsername(String userName) {
+        validateInputString(userName);
+        for(Person person : personSet) {
+            if(person.getCredentials().getUsername().equalsIgnoreCase(userName)) {
                 return person;
             }
         }

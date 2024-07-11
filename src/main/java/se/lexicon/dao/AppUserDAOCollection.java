@@ -19,7 +19,7 @@ public class AppUserDAOCollection implements AppUserDAO {
     public AppUser findByUsername(String userName) {
         validateInput(userName);
         for (AppUser appUser : appUserSet) {
-            if (appUser.getUsername().equals(userName)) {
+            if (appUser.getUsername().equalsIgnoreCase(userName)) {
                 return appUser;
             }
         }
@@ -38,7 +38,7 @@ public class AppUserDAOCollection implements AppUserDAO {
         AppUser removeAppUser;
         while (iterator.hasNext()) {
             removeAppUser = iterator.next();
-            if (removeAppUser.getUsername().equals(userName)) {
+            if (removeAppUser.getUsername().equalsIgnoreCase(userName)) {
                 iterator.remove();
                 break;
             }

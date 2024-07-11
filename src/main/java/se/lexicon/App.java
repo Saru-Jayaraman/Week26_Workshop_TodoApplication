@@ -73,6 +73,10 @@ public class App
         person = personDaoObj.findByEmail(personObj4.getEmail());
         System.out.println(person);
 
+        System.out.println("-------------------------------" + "Person class - Find by Username: " + personObj4.getCredentials().getUsername());
+        person = personDaoObj.findByUsername(personObj4.getCredentials().getUsername());
+        System.out.println(person);
+
         System.out.println("-------------------------------" + "Person class - Remove the id: " + personObj1.getId());
         personDaoObj.remove(personObj1.getId());
         System.out.println("-------------------------------" + "After Removing:");

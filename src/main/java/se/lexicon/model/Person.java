@@ -34,6 +34,10 @@ public class Person {
         return email;
     }
 
+    public AppUser getCredentials() {
+        return credentials;
+    }
+
     public void setFirstName(String firstName) {
         validateInput(firstName, "First Name");
         this.firstName = firstName;
