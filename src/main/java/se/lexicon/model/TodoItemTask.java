@@ -11,7 +11,8 @@ public class TodoItemTask {
 
     public TodoItemTask(Person assignee, TodoItem todoItem) {
         setTodoItem(todoItem);
-        this.id = TodoItemTaskIdSequencer.nextId();
+        TodoItemTaskIdSequencer sequencerObject = TodoItemTaskIdSequencer.getInstance();
+        this.id = sequencerObject.nextId();
         setAssignee(assignee);
     }
 

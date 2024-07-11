@@ -7,7 +7,22 @@ import java.util.Set;
 
 public class PersonDAOCollection implements PersonDAO {
 
-    Set<Person> personSet = new HashSet<>();
+    private final Set<Person> personSet;
+
+    //Singleton Object
+    private static PersonDAOCollection instance;
+
+    //Private constructor - to make the class not to get instantiated from outside
+    private PersonDAOCollection() {
+        personSet = new HashSet<>();
+    }
+
+    //When there is no object, create an object; Else return the instance of existing one.
+    public static PersonDAOCollection getInstance() {
+        if (instance == null)
+            instance = new PersonDAOCollection();
+        return instance;
+    }
 
     @Override
     public Person persist(Person person) {

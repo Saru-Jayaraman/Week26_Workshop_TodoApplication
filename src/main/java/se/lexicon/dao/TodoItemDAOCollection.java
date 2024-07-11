@@ -8,7 +8,21 @@ import java.util.Set;
 
 public class TodoItemDAOCollection implements TodoItemDAO {
 
-    Set<TodoItem> todoItemsSet = new HashSet<>();
+    private final Set<TodoItem> todoItemsSet;
+
+    //Singleton Object
+    private static TodoItemDAOCollection instance;
+
+    //Private constructor - to make the class not to get instantiated from outside
+    private TodoItemDAOCollection() {
+        todoItemsSet = new HashSet<>();
+    }
+
+    public static TodoItemDAOCollection getInstance() {
+        if(instance == null)
+            instance = new TodoItemDAOCollection();
+        return instance;
+    }
 
     @Override
     public TodoItem persist(TodoItem todoItem) {

@@ -7,7 +7,21 @@ import java.util.Set;
 
 public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
-    Set<TodoItemTask> todoItemTasksSet = new HashSet<>();
+    private final Set<TodoItemTask> todoItemTasksSet;
+
+    //Singleton Object
+    private static TodoItemTaskDAOCollection instance;
+
+    //Private constructor - to make the class not to get instantiated from outside
+    private TodoItemTaskDAOCollection() {
+        todoItemTasksSet = new HashSet<>();
+    }
+
+    public static TodoItemTaskDAOCollection getInstance() {
+        if(instance == null)
+            instance = new TodoItemTaskDAOCollection();
+        return instance;
+    }
 
     @Override
     public TodoItemTask persist(TodoItemTask todoItemTask) {

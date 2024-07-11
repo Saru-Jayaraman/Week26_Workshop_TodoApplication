@@ -7,7 +7,21 @@ import java.util.Set;
 
 public class AppUserDAOCollection implements AppUserDAO {
 
-    Set<AppUser> appUserSet = new HashSet<>();
+    private final Set<AppUser> appUserSet;
+
+    //Singleton Object
+    private static AppUserDAOCollection instance;
+
+    //Private constructor - to make the class not to get instantiated from outside
+    private AppUserDAOCollection() {
+        appUserSet = new HashSet<>();
+    }
+
+    public static AppUserDAOCollection getInstance() {
+        if(instance == null)
+            instance = new AppUserDAOCollection();
+        return instance;
+    }
 
     @Override
     public AppUser persist(AppUser appUser) {

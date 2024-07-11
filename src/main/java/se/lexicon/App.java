@@ -19,7 +19,7 @@ public class App
         AppUser appUserObj4 = new AppUser("person4", "person4", AppRole.ROLE_APP_ADMIN);
         AppUser appUserObj5 = new AppUser("person5", "person5", AppRole.ROLE_APP_USER);
 
-        AppUserDAOCollection appUserDAOCollection = new AppUserDAOCollection();
+        AppUserDAOCollection appUserDAOCollection = AppUserDAOCollection.getInstance();
         appUserDAOCollection.persist(appUserObj1);
         appUserDAOCollection.persist(appUserObj2);
         appUserDAOCollection.persist(appUserObj3);
@@ -52,15 +52,17 @@ public class App
         Person personObj4 = new Person("Person4", "Person4", "test4@gmail.com", appUserObj4);
         Person personObj5 = new Person("Person5", "Person5", "test5@gmail.com", appUserObj5);
 
-        PersonDAOCollection personDaoObj = new PersonDAOCollection();
+        PersonDAOCollection personDaoObj = PersonDAOCollection.getInstance();
         personDaoObj.persist(personObj1);
         personDaoObj.persist(personObj2);
         personDaoObj.persist(personObj3);
+
+        PersonDAOCollection personDaoObj1 = PersonDAOCollection.getInstance();
         personDaoObj.persist(personObj4);
         personDaoObj.persist(personObj5);
 
         System.out.println("-------------------------------" + "PERSON class - Find All:" + "-------------------------------");
-        Set<Person> personSet = personDaoObj.findAll();
+        Set<Person> personSet = personDaoObj1.findAll();
         for(Person person : personSet) {
             System.out.println(person.toString());
         }
@@ -98,7 +100,7 @@ public class App
         TodoItem todoItemObj5 = new TodoItem("Check light", "Light is blinking",
                 LocalDate.of(2024, 7, 15), personObj4, true);
 
-        TodoItemDAOCollection todoItemDAOCollection = new TodoItemDAOCollection();
+        TodoItemDAOCollection todoItemDAOCollection = TodoItemDAOCollection.getInstance();
         todoItemDAOCollection.persist(todoItemObj1);
         todoItemDAOCollection.persist(todoItemObj2);
         todoItemDAOCollection.persist(todoItemObj3);
@@ -161,7 +163,7 @@ public class App
         TodoItemTask todoItemTaskObj4 = new TodoItemTask(personObj4, todoItemObj4);
         TodoItemTask todoItemTaskObj5 = new TodoItemTask(personObj5, todoItemObj5);
 
-        TodoItemTaskDAOCollection todoItemTaskDAOCollection = new TodoItemTaskDAOCollection();
+        TodoItemTaskDAOCollection todoItemTaskDAOCollection = TodoItemTaskDAOCollection.getInstance();
 
         todoItemTaskDAOCollection.persist(todoItemTaskObj1);
         todoItemTaskDAOCollection.persist(todoItemTaskObj2);

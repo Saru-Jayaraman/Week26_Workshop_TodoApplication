@@ -1,17 +1,25 @@
 package se.lexicon.sequencers;
 
 public class TodoItemTaskIdSequencer {
-    public static int currentId = 200;
+    private int currentId;
 
-    public static int getCurrentId() {
-        return currentId;
+    private static TodoItemTaskIdSequencer instance;
+
+    private TodoItemTaskIdSequencer() {
+        currentId = 200;
     }
 
-    public static void setCurrentId(int currentId) {
-        TodoItemTaskIdSequencer.currentId = currentId;
+    public static TodoItemTaskIdSequencer getInstance() {
+        if (instance == null)
+            instance = new TodoItemTaskIdSequencer();
+        return instance;
     }
 
-    public static int nextId() {
+    public void setCurrentId(int currentId) {
+        this.currentId = currentId;
+    }
+
+    public int nextId() {
         currentId++;
         setCurrentId(currentId);
         return currentId;

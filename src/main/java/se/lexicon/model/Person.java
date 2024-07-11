@@ -11,7 +11,8 @@ public class Person {
     private AppUser credentials;
 
     public Person(String firstName, String lastName, String email, AppUser credentials) {
-        this.id = PersonIdSequencer.nextId();
+        PersonIdSequencer sequencerObject = PersonIdSequencer.getInstance();
+        this.id = sequencerObject.nextId();
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);

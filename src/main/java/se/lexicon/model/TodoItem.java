@@ -13,7 +13,8 @@ public class TodoItem {
     private Person creator;
 
     public TodoItem(String title, String taskDescription, LocalDate deadLine, Person creator, boolean done) {
-        this.id = TodoItemIdSequencer.nextId();
+        TodoItemIdSequencer sequencerObject = TodoItemIdSequencer.getInstance();
+        this.id = sequencerObject.nextId();
         setTitle(title);
         setTaskDescription(taskDescription);
         setDeadLine(deadLine);
