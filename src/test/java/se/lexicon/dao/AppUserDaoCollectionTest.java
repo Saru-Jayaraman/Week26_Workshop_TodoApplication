@@ -10,7 +10,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppUserDaoCollectionTest {
-    AppUserDAOCollection testObj, testObj1;
+    AppUserDAO testObj, testObj1;
     AppUser appUserObj1, appUserObj2;
     Set<AppUser> appUserSet;
 

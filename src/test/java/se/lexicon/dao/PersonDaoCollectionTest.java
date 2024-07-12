@@ -12,7 +12,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonDaoCollectionTest {
-    PersonDAOCollection testObj, testObj1;
+    PersonDAO testObj, testObj1;
     AppUser appUserObj1, appUserObj2;
     Person personObj1, personObj2;
     Set<Person> personSet;

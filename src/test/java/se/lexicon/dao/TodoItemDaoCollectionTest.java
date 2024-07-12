@@ -11,7 +11,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TodoItemDaoCollectionTest {
-    TodoItemDAOCollection testObj, testObj1;
+    TodoItemDAO testObj, testObj1;
     AppUser appUserObj1, appUserObj2;
     Person personObj1, personObj2;
     TodoItem todoItemObj1, todoItemObj2;
