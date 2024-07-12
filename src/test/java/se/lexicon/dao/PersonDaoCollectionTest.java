@@ -21,7 +21,8 @@ public class PersonDaoCollectionTest {
     public void setUp() {
         testObj = PersonDAOCollection.getInstance();
         personSet = new HashSet<>();
-        PersonIdSequencer.setCurrentId(0);
+        PersonIdSequencer sequencerObj = PersonIdSequencer.getInstance();
+        sequencerObj.setCurrentId(0);
         appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
         personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUserObj1);
         appUserObj2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
