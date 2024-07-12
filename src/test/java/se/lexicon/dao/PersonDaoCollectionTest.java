@@ -40,7 +40,7 @@ public class PersonDaoCollectionTest {
     @Order(2)
     void testPersist() {
         Person personDAOObject = testObj.persist(personObj1);
-        assertNotNull(personSet);
+        assertNotNull(personDAOObject);
 
         String expected = "Person{id=1, firstName='Person1', lastName='Person1', email='test1@gmail.com'}";
         assertEquals(expected, personDAOObject.toString());

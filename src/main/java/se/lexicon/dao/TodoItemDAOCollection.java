@@ -127,7 +127,7 @@ public class TodoItemDAOCollection implements TodoItemDAO {
 
     private void validateInputDate(LocalDate deadLine) {
         if(deadLine == null) {
-            throw new IllegalArgumentException("Deadline cannot be null...");
+            throw new NullPointerException("Deadline cannot be null...");
         }
     }
 
