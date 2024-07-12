@@ -1,7 +1,7 @@
 package se.lexicon.sequencers;
 
 public class PersonIdSequencer {
-    private int currentId;
+    private static int currentId;
 
     //Singleton Object
     private static PersonIdSequencer instance;
@@ -18,8 +18,8 @@ public class PersonIdSequencer {
         return instance;
     }
 
-    public void setCurrentId(int currentId) {
-        this.currentId = currentId;
+    public static void setCurrentId(int currentId) {
+        PersonIdSequencer.currentId = currentId;
     }
 
     public int nextId() {

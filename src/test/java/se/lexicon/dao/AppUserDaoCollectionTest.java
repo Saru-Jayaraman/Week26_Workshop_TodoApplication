@@ -5,18 +5,21 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import se.lexicon.model.AppRole;
 import se.lexicon.model.AppUser;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppUserDaoCollectionTest {
-    AppUserDAO testObj, testObj1;
+    AppUserDAOCollection testObj, testObj1;
+    AppUser appUserObj1, appUserObj2;
+    Set<AppUser> appUserSet;
 
     @BeforeEach
     public void setUp() {
         testObj = AppUserDAOCollection.getInstance();
+        appUserSet = new HashSet<>();
+        appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
+        appUserObj2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
     }
 
     @Test
@@ -29,7 +32,6 @@ public class AppUserDaoCollectionTest {
     @Test
     @Order(2)
     void testPersist() {
-        AppUser appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
         AppUser appUserDAOObject = testObj.persist(appUserObj1);
         assertNotNull(appUserDAOObject);
         String expected = "AppUser{username='person1', role=ROLE_APP_USER}";
@@ -40,9 +42,7 @@ public class AppUserDaoCollectionTest {
     @Order(3)
     void testFindByUsername() {
         //When Username is found
-        AppUser appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
-        AppUser appUserDAOObject = testObj.persist(appUserObj1);
-        assertNotNull(appUserDAOObject);
+        testObj.persist(appUserObj1);
         String expected = "AppUser{username='person1', role=ROLE_APP_USER}";
         assertEquals(expected, testObj.findByUsername("Person1").toString());
 
@@ -53,26 +53,21 @@ public class AppUserDaoCollectionTest {
     @Test
     @Order(4)
     void testFindAll() {
-        AppUser appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
-        AppUser appUserObj2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
-        testObj.persist(appUserObj1);
-        testObj.persist(appUserObj2);
-        assertEquals("[AppUser{username='person1', role=ROLE_APP_USER}, AppUser{username='person2', role=ROLE_APP_ADMIN}]", testObj.findAll().toString());
+        appUserSet.add(testObj.persist(appUserObj1));
+        appUserSet.add(testObj.persist(appUserObj2));
+        assertEquals(appUserSet.toString(), testObj.findAll().toString());
     }
 
     @Test
     @Order(5)
     void testRemove() {
-        AppUser appUserObj1 = testObj.persist(new AppUser("person1", "person1", AppRole.ROLE_APP_USER));
-        AppUser appUserObj2 = testObj.persist(new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN));
-        Set<AppUser> appUserSet = new HashSet<>();
-        appUserSet.add(appUserObj1);
-        appUserSet.add(appUserObj2);
+        appUserSet.add(testObj.persist(appUserObj1));
+        appUserSet.add(testObj.persist(appUserObj2));
         //When Username is found --> remove
         testObj.remove("person2");
-        assertEquals("[AppUser{username='person1', role=ROLE_APP_USER}]", testObj.findAll().toString());
-
         appUserSet.remove(appUserObj2);
+        assertEquals(appUserSet.toString(), testObj.findAll().toString());
+
         //When Username is found --> not remove
         int sizeBefore = appUserSet.size();
         testObj.remove("person2");
