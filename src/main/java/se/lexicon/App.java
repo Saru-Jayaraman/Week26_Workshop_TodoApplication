@@ -1,202 +1,116 @@
 package se.lexicon;
 
-import se.lexicon.dao.*;
-import se.lexicon.model.*;
+import se.lexicon.dao.db.MySQLConnection;
+import se.lexicon.dao.impl.PeopleDAOImpl;
+import se.lexicon.dao.impl.TodoItemDAOImpl;
+import se.lexicon.dao.PeopleDAO;
+import se.lexicon.dao.TodoItemsDAO;
+import se.lexicon.model.Person;
+import se.lexicon.model.TodoItem;
+
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Hello world!
- *
  */
-public class App
-{
-    public static void main( String[] args )
-    {
-        AppUser appUserObj1 = new AppUser("person1", "person1", AppRole.ROLE_APP_USER);
-        AppUser appUserObj2 = new AppUser("person2", "person2", AppRole.ROLE_APP_ADMIN);
-        AppUser appUserObj3 = new AppUser("person3", "person3", AppRole.ROLE_APP_USER);
-        AppUser appUserObj4 = new AppUser("person4", "person4", AppRole.ROLE_APP_ADMIN);
-        AppUser appUserObj5 = new AppUser("person5", "person5", AppRole.ROLE_APP_USER);
+public class App {
+    public static void main(String[] args) {
+        System.out.println("=====================================PERSON==========================================");
+        PeopleDAO peopleObj = new PeopleDAOImpl(MySQLConnection.getConnection());
 
-        AppUserDAO appUserDAOCollection = AppUserDAOCollection.getInstance();
-        appUserDAOCollection.persist(appUserObj1);
-        appUserDAOCollection.persist(appUserObj2);
-        appUserDAOCollection.persist(appUserObj3);
-        appUserDAOCollection.persist(appUserObj4);
-        appUserDAOCollection.persist(appUserObj5);
-
-        System.out.println("-------------------------------" + "APP USER class - Find All:" + "-------------------------------");
-        Set<AppUser> appUserSet = appUserDAOCollection.findAll();
-        for(AppUser appUser : appUserSet) {
-            System.out.println(appUser.toString());
-        }
-
-        System.out.println("-------------------------------" + "AppUser class - Find by Username: " + appUserObj2.getUsername());
-        AppUser appUser = appUserDAOCollection.findByUsername(appUserObj2.getUsername());
-        System.out.println(appUser);
-
-        System.out.println("-------------------------------" + "AppUser class - Remove the id: " + appUserObj3.getUsername());
-        appUserDAOCollection.remove(appUserObj3.getUsername());
-        System.out.println("-------------------------------" + "After Removing:");
-        appUserSet = appUserDAOCollection.findAll();
-        for(AppUser appUser1 : appUserSet) {
-            System.out.println(appUser1.toString());
-        }
-
+        System.out.println("====================================CREATE()=========================================");
+        System.out.println("Inserted person: " + peopleObj.create(new Person("Firstname14", "Lastname14")));
+//        System.out.println("Inserted person: " + peopleObj.create(null)); // Throws error
         System.out.println();
 
-        Person personObj1 = new Person("Person1", "Person1", "test1@gmail.com", appUserObj1);
-        Person personObj2 = new Person("Person2", "Person2", "test2@gmail.com", appUserObj2);
-        Person personObj3 = new Person("Person3", "Person3", "test3@gmail.com", appUserObj3);
-        Person personObj4 = new Person("Person4", "Person4", "test4@gmail.com", appUserObj4);
-        Person personObj5 = new Person("Person5", "Person5", "test5@gmail.com", appUserObj5);
-
-        PersonDAO personDaoObj = PersonDAOCollection.getInstance();
-        personDaoObj.persist(personObj1);
-        personDaoObj.persist(personObj2);
-        personDaoObj.persist(personObj3);
-
-        PersonDAO personDaoObj1 = PersonDAOCollection.getInstance();
-        personDaoObj.persist(personObj4);
-        personDaoObj.persist(personObj5);
-
-        System.out.println("-------------------------------" + "PERSON class - Find All:" + "-------------------------------");
-        Set<Person> personSet = personDaoObj1.findAll();
-        for(Person person : personSet) {
-            System.out.println(person.toString());
-        }
-
-        System.out.println("-------------------------------" + "Person class - Find by ID:" + personObj1.getId());
-        Person person = personDaoObj.findById(personObj1.getId());
-        System.out.println(person);
-
-        System.out.println("-------------------------------" + "Person class - Find by Email: " + personObj4.getEmail());
-        person = personDaoObj.findByEmail(personObj4.getEmail());
-        System.out.println(person);
-
-        System.out.println("-------------------------------" + "Person class - Find by Username: " + personObj4.getCredentials().getUsername());
-        person = personDaoObj.findByUsername(personObj4.getCredentials().getUsername());
-        System.out.println(person);
-
-        System.out.println("-------------------------------" + "Person class - Remove the id: " + personObj1.getId());
-        personDaoObj.remove(personObj1.getId());
-        System.out.println("-------------------------------" + "After Removing:");
-        personSet = personDaoObj.findAll();
-        for(Person person1 : personSet) {
-            System.out.println(person1.toString());
-        }
-
+        System.out.println("====================================FIND ALL()=======================================");
+        System.out.println("Person List:");
+        Collection<Person> personList = peopleObj.findAll();
+        if (personList.isEmpty())
+            System.out.println("No elements found...");
+        else
+            personList.forEach(System.out::println);
         System.out.println();
 
-        TodoItem todoItemObj1 = new TodoItem("Change Tires", "Preferable to use MRF brand",
-                LocalDate.of(2024, 6, 30), personObj1, true);
-        TodoItem todoItemObj2 = new TodoItem("Check brightness of light", "Light is dim",
-                LocalDate.of(2024, 5, 30), personObj2, false);
-        TodoItem todoItemObj3 = new TodoItem("Check brake", "Produces sound when applying brake",
-                LocalDate.of(2024, 5, 30), personObj2, true);
-        TodoItem todoItemObj4 = new TodoItem("Check horn", "Produces sound when pressing brake",
-                LocalDate.of(2024, 7, 30), personObj4, false);
-        TodoItem todoItemObj5 = new TodoItem("Check light", "Light is blinking",
-                LocalDate.of(2024, 7, 15), personObj4, true);
-
-        TodoItemDAO todoItemDAOCollection = TodoItemDAOCollection.getInstance();
-        todoItemDAOCollection.persist(todoItemObj1);
-        todoItemDAOCollection.persist(todoItemObj2);
-        todoItemDAOCollection.persist(todoItemObj3);
-        todoItemDAOCollection.persist(todoItemObj4);
-        todoItemDAOCollection.persist(todoItemObj5);
-
-        System.out.println("-------------------------------" + "TODO ITEM class - Find All:" + "-------------------------------");
-        Set<TodoItem> todoItemSet = todoItemDAOCollection.findAll();
-        for(TodoItem todoItem : todoItemSet) {
-            System.out.println(todoItem.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by ID:" + todoItemObj2.getId());
-        TodoItem todoItem = todoItemDAOCollection.findById(todoItemObj2.getId());
-        System.out.println(todoItem);
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by Done Status: TRUE");
-        todoItemSet = todoItemDAOCollection.findAllByDoneStatus(true);
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by Title: " + todoItemObj4.getTitle());
-        todoItemSet = todoItemDAOCollection.findByTitleContains("check horn");
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by Person Id: " + todoItemObj2.getCreator().getId());
-        todoItemSet = todoItemDAOCollection.findByPersonID(todoItemObj2.getCreator().getId());
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by Deadline Before: " + LocalDate.of(2024,6,30));
-        todoItemSet = todoItemDAOCollection.findByDeadlineBefore(LocalDate.of(2024,6,30));
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Find by Deadline After: " + LocalDate.of(2024,6,29));
-        todoItemSet = todoItemDAOCollection.findByDeadlineAfter(LocalDate.of(2024,6,29));
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
-        System.out.println("-------------------------------" + "TodoItem class - Remove the id: " + todoItemObj2.getId());
-        todoItemDAOCollection.remove(todoItemObj2.getId());
-        System.out.println("-------------------------------" + "After Removing:");
-        todoItemSet = todoItemDAOCollection.findAll();
-        for(TodoItem todoItem1 : todoItemSet) {
-            System.out.println(todoItem1.toString());
-        }
-
+        System.out.println("====================================FIND BY ID()=====================================");
+        int findId = 10;
+        System.out.println("Person Details of id " + findId + " : " + peopleObj.findById(findId));
         System.out.println();
 
-        TodoItemTask todoItemTaskObj1 = new TodoItemTask(personObj1, todoItemObj1);
-        TodoItemTask todoItemTaskObj2 = new TodoItemTask(personObj1, todoItemObj2);
-        TodoItemTask todoItemTaskObj3 = new TodoItemTask(personObj2, todoItemObj3);
-        TodoItemTask todoItemTaskObj4 = new TodoItemTask(personObj4, todoItemObj4);
-        TodoItemTask todoItemTaskObj5 = new TodoItemTask(personObj5, todoItemObj5);
+        System.out.println("=================================FIND BY USERNAME()==================================");
+        String findName = "Firstname11 Lastname11";
+        System.out.println("Person Details of username " + findName + " : ");
+        peopleObj.findByUsername(findName).forEach(System.out::println);
+        System.out.println();
 
-        TodoItemTaskDAO todoItemTaskDAOCollection = TodoItemTaskDAOCollection.getInstance();
+        System.out.println("======================================UPDATE()=======================================");
+        Person updatePerson = new Person(33, "Firstname33", "Lastname33");
+//        System.out.println("Updated Person Details: " + peopleObj.update(null)); // Throws error
+        System.out.println("Updated Person Details: " + peopleObj.update(updatePerson));
+        System.out.println();
 
-        todoItemTaskDAOCollection.persist(todoItemTaskObj1);
-        todoItemTaskDAOCollection.persist(todoItemTaskObj2);
-        todoItemTaskDAOCollection.persist(todoItemTaskObj3);
-        todoItemTaskDAOCollection.persist(todoItemTaskObj4);
-        todoItemTaskDAOCollection.persist(todoItemTaskObj5);
+        System.out.println("====================================DELETE()=========================================");
+        int deleteId = 3;
+        System.out.println("Is Person " + deleteId + " deleted: " + peopleObj.deleteById(deleteId));
+        System.out.println();
 
-        System.out.println("-------------------------------" + "TODO ITEM TASK class - Find All:" + "-------------------------------");
-        Set<TodoItemTask> todoItemTaskSet = todoItemTaskDAOCollection.findAll();
-        for(TodoItemTask todoItemTask : todoItemTaskSet) {
-            System.out.println(todoItemTask.toString());
-        }
+        System.out.println("====================================TODOITEM=========================================");
+        TodoItemsDAO todoItemsObj = new TodoItemDAOImpl(MySQLConnection.getConnection());
 
-        System.out.println("-------------------------------" + "TodoItemTask class - Find by ID: " + todoItemTaskObj3.getId());
-        TodoItemTask todoItemTask = todoItemTaskDAOCollection.findById(todoItemTaskObj3.getId());
-        System.out.println(todoItemTask);
+        System.out.println("====================================CREATE()=========================================");
+        System.out.println("Inserted Todoitem: " + todoItemsObj.create(new TodoItem("Task3", "Description3",
+                LocalDate.of(2024, 11, 30), 10, true)));
+        System.out.println("Inserted Todoitem: " + todoItemsObj.create(new TodoItem("Task7", "Description7",
+                LocalDate.of(2024, 8, 30), false)));
+        System.out.println();
 
-        System.out.println("-------------------------------" + "TodoItemTask class - Find by Assigned Status: FALSE");
-        todoItemTaskSet = todoItemTaskDAOCollection.findByAssignedStatus(false);
-        System.out.println(todoItemTaskSet);
+        System.out.println("====================================FIND ALL()=======================================");
+        System.out.println("TodoItem List:");
+        Collection<TodoItem> todoItemsList = todoItemsObj.findAll();
+        if (todoItemsList.isEmpty())
+            System.out.println("No elements found...");
+        else
+            todoItemsList.forEach(System.out::println);
+        System.out.println();
 
-        System.out.println("-------------------------------" + "TodoItemTask class - Find by Person Id: " + todoItemTaskObj1.getAssignee().getId());
-        todoItemTaskSet = todoItemTaskDAOCollection.findByPersonId(todoItemTaskObj1.getAssignee().getId());
-        System.out.println(todoItemTaskSet);
+        System.out.println("====================================FIND BY ID()=====================================");
+        int findTodoItemId = 10;
+        System.out.println("TodoItem Details of id " + findTodoItemId + " : " + todoItemsObj.findById(findTodoItemId));
+        System.out.println();
 
-        System.out.println("-------------------------------" + "TodoItemTask class - Remove the id: " + todoItemTaskObj5.getId());
-        todoItemTaskDAOCollection.remove(todoItemTaskObj5.getId());
-        System.out.println("-------------------------------" + "After Removing:");
-        todoItemTaskSet = todoItemTaskDAOCollection.findAll();
-        for(TodoItemTask todoItemTask1 : todoItemTaskSet) {
-            System.out.println(todoItemTask1.toString());
-        }
+        System.out.println("================================FIND BY ASSIGNEE ID()================================");
+        int findAssigneeId = 11;
+        System.out.println("TodoItem Details of id " + findAssigneeId + " :");
+        todoItemsObj.findByAssignee(findAssigneeId).forEach(System.out::println);
+        System.out.println();
 
+        System.out.println("================================FIND BY DONE STATUS()================================");
+        boolean done = false;
+        System.out.println("TodoItem Details of DONE status: " + done);
+        todoItemsObj.findAllByDoneStatus(done).forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("==============================FIND BY UNASSIGNED TASK()==============================");
+        System.out.println("TodoItem Details of UNASSIGNED TASKS:");
+        todoItemsObj.unAssignedTodoItems().forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("====================================UPDATE()=========================================");
+        TodoItem updateTodoItem = new TodoItem(9, "Task9", "Description9",
+                LocalDate.of(2024, 11, 30), true, 10);
+        System.out.println("Updated TodoItem Details: " + todoItemsObj.update(updateTodoItem));
+        System.out.println();
+
+        System.out.println("====================================DELETE()=========================================");
+        int deleteTodoItemId = 2;
+        System.out.println("Is Todoitem id " + deleteTodoItemId + " deleted: " + todoItemsObj.deleteById(deleteTodoItemId));
+        System.out.println();
+
+        System.out.println("=================================FIND BY ASSIGNEE()==================================");
+        Person findByPerson = new Person(11, "Firstname11", "Lastname11");
+        System.out.println("TodoItem Details of person " + findByPerson + " :");
+        todoItemsObj.findByAssignee(findByPerson).forEach(System.out::println);
         System.out.println();
     }
 }

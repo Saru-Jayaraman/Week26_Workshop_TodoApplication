@@ -2,24 +2,43 @@ package se.lexicon.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import se.lexicon.sequencers.*;
 
 public class TodoItem {
-    private final int id;
+    private int id;
     private String title;
     private String taskDescription;
     private LocalDate deadLine;
     private boolean done;
-    private Person creator;
+    private int assigneeId;
+    private boolean assigned;
 
-    public TodoItem(String title, String taskDescription, LocalDate deadLine, Person creator, boolean done) {
-        TodoItemIdSequencer sequencerObject = TodoItemIdSequencer.getInstance();
-        this.id = sequencerObject.nextId();
+    //Create a Todoitem object - With assignee
+    public TodoItem(String title, String taskDescription, LocalDate deadLine, int assigneeId, boolean done) {
         setTitle(title);
-        setTaskDescription(taskDescription);
+        this.taskDescription = taskDescription;
         setDeadLine(deadLine);
-        setCreator(creator);
-        setDone(done);
+        this.done = done;
+        this.assigneeId = assigneeId;
+        this.assigned = true;
+    }
+
+    //Create a Todoitem object - Without assignee
+    public TodoItem(String title, String taskDescription, LocalDate deadLine, boolean done) {
+        setTitle(title);
+        this.taskDescription = taskDescription;
+        setDeadLine(deadLine);
+        this.done = done;
+        this.assigned = false;
+    }
+
+    //Fetch Todoitem object
+    public TodoItem(int id, String title, String taskDescription, LocalDate deadLine, boolean done, int assigneeId) {
+        this.id = id;
+        this.title = title;
+        this.taskDescription = taskDescription;
+        this.deadLine = deadLine;
+        this.done = done;
+        this.assigneeId = assigneeId;
     }
 
     public int getId() {
@@ -42,37 +61,27 @@ public class TodoItem {
         return done;
     }
 
-    public Person getCreator() {
-        return creator;
+    public int getAssigneeId() {
+        return assigneeId;
+    }
+
+    public boolean isAssigned() {
+        return assigned;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setTitle(String title) {
-        if(title == null || title.trim().isEmpty()) {
+        if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Title should not be null or empty...");
         }
         this.title = title;
     }
 
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
-    }
-
     public void setDeadLine(LocalDate deadLine) {
         this.deadLine = Objects.requireNonNull(deadLine, "DeadLine cannot be null...");
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
-    }
-
-    public void setCreator(Person creator) {
-        if(creator == null)
-            throw new IllegalArgumentException("Creator detail is mandatory...");
-        this.creator = creator;
-    }
-
-    public boolean isOverdue() {
-        return LocalDate.now().isAfter(deadLine);
     }
 
     @Override
@@ -80,18 +89,19 @@ public class TodoItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TodoItem todoItem = (TodoItem) o;
-        return id == todoItem.id && done == todoItem.done && Objects.equals(title, todoItem.title) && Objects.equals(taskDescription, todoItem.taskDescription) && Objects.equals(deadLine, todoItem.deadLine);
+        return id == todoItem.id && Objects.equals(title, todoItem.title) && Objects.equals(taskDescription, todoItem.taskDescription) &&
+                Objects.equals(deadLine, todoItem.deadLine) && done == todoItem.done && assigneeId == todoItem.assigneeId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, taskDescription, deadLine, done);
+        return Objects.hash(id, title, taskDescription, deadLine, done, assigneeId);
     }
 
     @Override
     public String toString() {
-        return "TodoItem{" + "id=" + getId() + ", title='" + getTitle() + '\'' +
-                ", taskDescription='" + getTaskDescription() + '\'' + ", deadLine=" + getDeadLine() +
-                ", done=" + isDone() + '}';
+        return "TodoItem {" + "Id: " + getId() + ", Title: '" + getTitle() + '\'' +
+                ", TaskDescription: '" + getTaskDescription() + '\'' + ", DeadLine: " + getDeadLine() +
+                ", Done: " + isDone() + ", AssigneeId: " + getAssigneeId() + '}';
     }
 }
