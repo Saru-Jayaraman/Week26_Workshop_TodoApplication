@@ -17,9 +17,7 @@ public class PeopleDAOImpl implements PeopleDAO {
 
     @Override
     public Person create(Person person) {
-        if (Objects.isNull(person)) {
-            throw new NullPointerException("Person detail is null... Cannot perform insertion operation...");
-        }
+        validateInputObject(person, "insertion");
         String query = "insert into person(first_name, last_name) values(?, ?)";
         try (
                 PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)
@@ -27,9 +25,8 @@ public class PeopleDAOImpl implements PeopleDAO {
             preparedStatement.setString(1, person.getFirstName());
             preparedStatement.setString(2, person.getLastName());
             int resultSet = preparedStatement.executeUpdate();
-            if (resultSet == 0) {
+            if (resultSet == 0)
                 throw new IllegalArgumentException("Creation operation failed...");
-            }
             System.out.println("Person added successfully!!!");
             try (
                     ResultSet generatedKeys = preparedStatement.getGeneratedKeys()
@@ -70,8 +67,7 @@ public class PeopleDAOImpl implements PeopleDAO {
     @Override
     public Person findById(int id) {
         Person person = null;
-        if (id <= 0)
-            throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+        validateInput(id);
         String query = "select * from person where person_id = ?";
         try (
                 PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -129,13 +125,10 @@ public class PeopleDAOImpl implements PeopleDAO {
 
     @Override
     public Person update(Person person) {
-        if (Objects.isNull(person)) {
-            throw new NullPointerException("Person detail is null... Cannot perform updation operation...");
-        }
+        validateInputObject(person, "updation");
         Person existingPerson = findById(person.getId());
-        if (existingPerson.equals(person)) {
+        if (existingPerson.equals(person))
             throw new IllegalArgumentException("Existing record in the database and Record to be updated are same... Updation is not needed...");
-        }
         String query = "update person set first_name = ?, last_name = ? where person_id = ?";
         try (
                 PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -144,9 +137,8 @@ public class PeopleDAOImpl implements PeopleDAO {
             preparedStatement.setString(2, person.getLastName());
             preparedStatement.setInt(3, person.getId());
             int resultSet = preparedStatement.executeUpdate();
-            if (resultSet == 0) {
+            if (resultSet == 0)
                 throw new MySQLException("Updation operation failed...");
-            }
             System.out.println("Person updated successfully!!!");
             System.out.println("Updated count: " + resultSet);
         } catch (SQLException e) {
@@ -157,8 +149,7 @@ public class PeopleDAOImpl implements PeopleDAO {
 
     @Override
     public boolean deleteById(int id) {
-        if (id <= 0)
-            throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+        validateInput(id);
         findById(id);
         String query = "delete from person where person_id = ?";
         try (
@@ -173,5 +164,15 @@ public class PeopleDAOImpl implements PeopleDAO {
         } catch (SQLException e) {
             throw new MySQLException("Error occurred while deleting person with id: " + id, e);
         }
+    }
+
+    private void validateInput(int id) {
+        if (id <= 0)
+            throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+    }
+
+    private void validateInputObject(Person person, String operationName) {
+        if (Objects.isNull(person))
+            throw new NullPointerException("Person detail is null... Cannot perform " + operationName + " operation...");
     }
 }

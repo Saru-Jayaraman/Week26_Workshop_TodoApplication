@@ -23,9 +23,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     @Override
     public TodoItem create(TodoItem todoItem) {
         {
-            if (Objects.isNull(todoItem)) {
-                throw new NullPointerException("Todo detail is null... Cannot perform insertion operation...");
-            }
+            validateInputObject(todoItem, "insertion");
             StringBuilder queryStringBuilder = new StringBuilder("insert into todo_item(title, description, deadline, done");
             //Number of parameters for insertion with assignee id : 5
             //Number of parameters for insertion without assignee id : 4
@@ -46,9 +44,8 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
                     preparedStatement.setInt(5, todoItem.getAssigneeId());
                 }
                 int resultSet = preparedStatement.executeUpdate();
-                if (resultSet == 0) {
+                if (resultSet == 0)
                     throw new IllegalArgumentException("Creation operation failed...");
-                }
                 System.out.println("Todo Item added successfully!!!");
                 try (
                         ResultSet generatedKeys = preparedStatement.getGeneratedKeys()
@@ -96,8 +93,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     public TodoItem findById(int id) {
         {
             TodoItem todoItem = null;
-            if (id <= 0)
-                throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+            validateInput(id);
             String query = "select * from todo_item where todo_id = ?";
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -161,8 +157,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     @Override
     public Collection<TodoItem> findByAssignee(int id) {
         List<TodoItem> todoItemList = new ArrayList<>();
-        if (id <= 0)
-            throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+        validateInput(id);
         String query = "select * from todo_item where assignee_id = ?";
         try (
                 PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -195,8 +190,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     public Collection<TodoItem> findByAssignee(Person person) {
         {
             List<TodoItem> todoItemList = new ArrayList<>();
-            if (person.getId() <= 0)
-                throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+            validateInput(person.getId());
             String query = "select * from todo_item where assignee_id = ?";
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -258,13 +252,10 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     @Override
     public TodoItem update(TodoItem todoItem) {
         {
-            if (Objects.isNull(todoItem)) {
-                throw new NullPointerException("TodoItem detail is null... Cannot perform updation operation...");
-            }
+            validateInputObject(todoItem, "updation");
             TodoItem existingTodoItem = findById(todoItem.getId());
-            if (existingTodoItem.equals(todoItem)) {
+            if (existingTodoItem.equals(todoItem))
                 throw new IllegalArgumentException("Existing record in the database and Record to be updated are same... Updation is not needed...");
-            }
             String query = "update todo_item set title = ?, description = ?, deadLine = ?, done = ?, assignee_id = ? where todo_id = ?";
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -276,9 +267,8 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
                 preparedStatement.setInt(5, todoItem.getAssigneeId());
                 preparedStatement.setInt(6, todoItem.getId());
                 int resultSet = preparedStatement.executeUpdate();
-                if (resultSet == 0) {
+                if (resultSet == 0)
                     throw new IllegalArgumentException("Updation operation failed...");
-                }
                 System.out.println("TodoItem updated successfully!!!");
                 System.out.println("Updated count: " + resultSet);
             } catch (SQLException e) {
@@ -291,8 +281,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
     @Override
     public boolean deleteById(int id) {
         {
-            if (id <= 0)
-                throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+            validateInput(id);
             findById(id);
             String query = "delete from todo_item where todo_id = ?";
             try (
@@ -308,5 +297,14 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
                 throw new MySQLException("Error occurred while deleting todo item with id: " + id, e);
             }
         }
+    }
+
+    private void validateInput(int id) {
+        if (id <= 0)
+            throw new IllegalArgumentException("Id can be neither 0 nor negative...");
+    }
+    private void validateInputObject(TodoItem todoItem, String operationName) {
+        if (Objects.isNull(todoItem))
+            throw new NullPointerException("Todo detail is null... Cannot perform " + operationName + " operation...");
     }
 }
