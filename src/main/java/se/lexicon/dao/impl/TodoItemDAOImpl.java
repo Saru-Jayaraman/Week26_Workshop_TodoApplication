@@ -303,6 +303,7 @@ public class TodoItemDAOImpl implements TodoItemsDAO {
         if (id <= 0)
             throw new IllegalArgumentException("Id can be neither 0 nor negative...");
     }
+
     private void validateInputObject(TodoItem todoItem, String operationName) {
         if (Objects.isNull(todoItem))
             throw new NullPointerException("Todo detail is null... Cannot perform " + operationName + " operation...");
