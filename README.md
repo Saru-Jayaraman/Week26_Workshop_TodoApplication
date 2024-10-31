@@ -1,6 +1,6 @@
 ### TODO IT project:
 
-Following 4 assignments/workshops has been committed in different branches in different time periods:
+TODO IT project contains 4 branches. Each branch represent the implementation of assignment/workshop project. All these projects has been committed in each of these branches in different time periods:
 
 1. - [x] Assignment Todo IT-Part1: Covers the concepts of OOPS concepts like Class, Object, Encapsulation and Abstraction.
 * Branch: master
